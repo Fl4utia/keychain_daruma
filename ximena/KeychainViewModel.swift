@@ -1,6 +1,7 @@
 import SwiftUI
 import RealityKit
 import Combine
+import CoreMotion   // ← NEW
 
 // MARK: - ViewModel
 
@@ -19,9 +20,16 @@ class KeychainViewModel: NSObject, ObservableObject {
     private let damping: Float   = 0.96
     private let dragForce: Float = 0.06
 
+    // ── Clamp: ±π/2 (90°) each side = 180° total arc ──
+    private let maxAngle: Float  = .pi / 2
+
     private var pendulumLink: CADisplayLink?
     private var idleTime: Float = 0
     private var idleLink: CADisplayLink?
+
+    // ── Gyroscope ──────────────────────────────────────
+    private let motionManager = CMMotionManager()
+    private var gyroForce: Float = 0   // accumulated tilt influence
 
     func setup(arView: ARView) {
         self.arView = arView
@@ -52,10 +60,28 @@ class KeychainViewModel: NSObject, ObservableObject {
         arView.scene.anchors.append(anchor)
 
         loadModels()
+        startGyroscope()   // ← NEW
+    }
+
+    // MARK: - Gyroscope
+
+    private func startGyroscope() {
+        guard motionManager.isDeviceMotionAvailable else { return }
+
+        // Update at 60 Hz; we read the value each display-link frame instead
+        // of using the handler queue so we stay on the main thread.
+        motionManager.deviceMotionUpdateInterval = 1.0 / 60.0
+        motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, _ in
+            guard let self, let motion else { return }
+            // gravity.x ranges –1 … +1 (device tilted left/right).
+            // We use it as a continuous nudge force on the pendulum.
+            // Negated so daruma swings in the correct direction when tilting
+            self.gyroForce = -Float(motion.gravity.x) * 0.004
+        }
     }
 
     // MARK: - Carga de modelos
-    // 🎛️ AJUSTA AQUÍ las escalas y posiciones
+
     private func loadModels() {
         guard
             let argollaEntity  = try? Entity.load(named: "objeto3"),
@@ -67,30 +93,30 @@ class KeychainViewModel: NSObject, ObservableObject {
         }
 
         // ── ARGOLLA ──────────────────────────────────
-        argollaEntity.scale    = SIMD3<Float>(repeating: 0.15)
-        argollaEntity.position = SIMD3<Float>(0, 0.20, -0.5)
+        argollaEntity.scale    = SIMD3<Float>(repeating: 0.2)
+        argollaEntity.position = SIMD3<Float>(0, 11, -0.4)
         anchorEntity?.addChild(argollaEntity)
         self.argolla = argollaEntity
 
-        // ── GANCHITO ──────────────────────────────────
-        ganchitoEntity.scale    = SIMD3<Float>(repeating: 0.55)
-        ganchitoEntity.position = SIMD3<Float>(0.25, 0, -1)
+        // ── GANCHITO ─────────────────────────────────
+        ganchitoEntity.scale    = SIMD3<Float>(repeating: 0.6)
+        // Position offset so the TOP of ganchito aligns with the argolla's origin,
+        // making it look attached to the bottom of the ring rather than centered on it.
+        ganchitoEntity.position = SIMD3<Float>(0.25, 3, -1.5)
 
-        // El modelo está tumbado en XZ → lo levantamos con X, luego Z para orientar vertical
-        let rotGX = simd_quatf(angle: -.pi / 2, axis: SIMD3<Float>(1, 0, 0))  // levanta del suelo
-        let rotGZ = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(0, 0, 1))  // gira para que el largo quede en Y
+        let rotGX = simd_quatf(angle: -.pi / 2, axis: SIMD3<Float>(1, 0, 0))
+        let rotGZ = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(0, 0, 1))
         ganchitoEntity.orientation = rotGX * rotGZ
         argollaEntity.addChild(ganchitoEntity)
         self.ganchito = ganchitoEntity
 
-        // ── DARUMA — compensa la rotación del ganchito ─
-        darumaEntity.scale    = SIMD3<Float>(repeating: 1.8)
-        darumaEntity.position = SIMD3<Float>(4, 0.2, 0)
+        // ── DARUMA — bigger scale (was 1.8) ──────────
+        darumaEntity.scale    = SIMD3<Float>(repeating: 5.0)   // ← BIGGER
+        darumaEntity.position = SIMD3<Float>(10, 0.2, 0)
 
-        // Compensamos rotGX (-.pi/2 en X) y rotGZ (.pi/2 en Z) del padre, más las rotaciones originales
-        let rotX = simd_quatf(angle:  .pi/2, axis: SIMD3<Float>(1, 0, 0))  // invierte rotGX del padre
-        let rotZ = simd_quatf(angle: -.pi, axis: SIMD3<Float>(0, 0, 1))  // invierte rotGZ del padre
-        let rotY = simd_quatf(angle:  .pi/2,     axis: SIMD3<Float>(0, 1, 0))  // orientación original
+        let rotX = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(1, 0, 0))
+        let rotZ = simd_quatf(angle: -.pi,     axis: SIMD3<Float>(0, 0, 1))
+        let rotY = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(0, 1, 0))
         darumaEntity.orientation = rotZ * rotX * rotY
         ganchitoEntity.addChild(darumaEntity)
         self.daruma = darumaEntity
@@ -98,6 +124,7 @@ class KeychainViewModel: NSObject, ObservableObject {
         startPendulumLoop()
         startIdleFloat()
     }
+
     // MARK: - Gesture (solo horizontal)
 
     func handleDrag(translation: CGSize) {
@@ -106,7 +133,7 @@ class KeychainViewModel: NSObject, ObservableObject {
 
     func handleDragEnded() {}
 
-    // MARK: - Péndulo (solo eje Y = izquierda/derecha)
+    // MARK: - Péndulo — clamped to ±maxAngle
 
     private func startPendulumLoop() {
         let link = CADisplayLink(target: self, selector: #selector(pendulumStep))
@@ -115,9 +142,21 @@ class KeychainViewModel: NSObject, ObservableObject {
     }
 
     @objc private func pendulumStep() {
+        // Add gyroscope nudge each frame
+        velocityY += gyroForce
+
         velocityY += -gravity * angleY
         velocityY *= damping
         angleY    += velocityY
+
+        // ── Clamp to ±90° and kill velocity if we hit the wall ──
+        if angleY > maxAngle {
+            angleY    =  maxAngle
+            velocityY = -abs(velocityY) * 0.3   // small bounce-back
+        } else if angleY < -maxAngle {
+            angleY    = -maxAngle
+            velocityY =  abs(velocityY) * 0.3
+        }
 
         guard let ganchitoEntity = ganchito else { return }
 
