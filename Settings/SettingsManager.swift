@@ -44,6 +44,16 @@ enum AppFont: String, CaseIterable, Identifiable {
         case .monospaced: .system(.body, design: .monospaced)
         }
     }
+
+    /// Underlying design token — used to build arbitrary-size fonts outside this enum
+    var design: Font.Design {
+        switch self {
+        case .system:     .default
+        case .rounded:    .rounded
+        case .serif:      .serif
+        case .monospaced: .monospaced
+        }
+    }
 }
 
 // MARK: - App Icon
