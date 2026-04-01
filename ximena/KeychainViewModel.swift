@@ -75,7 +75,6 @@ class KeychainViewModel: NSObject, ObservableObject {
             guard let self, let motion else { return }
             // gravity.x ranges –1 … +1 (device tilted left/right).
             // We use it as a continuous nudge force on the pendulum.
-            // Negated so daruma swings in the correct direction when tilting
             self.gyroForce = -Float(motion.gravity.x) * 0.004
         }
     }
@@ -94,25 +93,30 @@ class KeychainViewModel: NSObject, ObservableObject {
 
         // ── ARGOLLA ──────────────────────────────────
         argollaEntity.scale    = SIMD3<Float>(repeating: 0.2)
-        argollaEntity.position = SIMD3<Float>(0, 11, -0.4)
+        argollaEntity.position = SIMD3<Float>(0, 9, -0.4)
         anchorEntity?.addChild(argollaEntity)
         self.argolla = argollaEntity
 
         // ── GANCHITO ─────────────────────────────────
+        // A pivot entity sits at the ring's bottom (local origin = top of chain).
+        // The ganchito is offset downward inside it so it hangs below the pivot.
+        let pivotEntity = Entity()
+        pivotEntity.position = SIMD3<Float>(0, 0, 0)   // sits at argolla origin
+
         ganchitoEntity.scale    = SIMD3<Float>(repeating: 0.6)
-        // Position offset so the TOP of ganchito aligns with the argolla's origin,
-        // making it look attached to the bottom of the ring rather than centered on it.
-        ganchitoEntity.position = SIMD3<Float>(0.25, 3, -1.5)
+        // Shift ganchito down so its TOP aligns with the pivot origin
+        ganchitoEntity.position = SIMD3<Float>(0.25, -1.5, -1.2)
 
         let rotGX = simd_quatf(angle: -.pi / 2, axis: SIMD3<Float>(1, 0, 0))
         let rotGZ = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(0, 0, 1))
         ganchitoEntity.orientation = rotGX * rotGZ
-        argollaEntity.addChild(ganchitoEntity)
-        self.ganchito = ganchitoEntity
+        pivotEntity.addChild(ganchitoEntity)
+        argollaEntity.addChild(pivotEntity)
+        self.ganchito = pivotEntity   // pendulum now rotates the pivot, not ganchito directly
 
         // ── DARUMA — bigger scale (was 1.8) ──────────
-        darumaEntity.scale    = SIMD3<Float>(repeating: 5.0)   // ← BIGGER
-        darumaEntity.position = SIMD3<Float>(10, 0.2, 0)
+        darumaEntity.scale    = SIMD3<Float>(repeating: 3.0)   // ← BIGGER
+        darumaEntity.position = SIMD3<Float>(6, 0.2, 0)
 
         let rotX = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(1, 0, 0))
         let rotZ = simd_quatf(angle: -.pi,     axis: SIMD3<Float>(0, 0, 1))
@@ -158,13 +162,12 @@ class KeychainViewModel: NSObject, ObservableObject {
             velocityY =  abs(velocityY) * 0.3
         }
 
-        guard let ganchitoEntity = ganchito else { return }
+        guard let pivotEntity = ganchito else { return }
 
-        let rotX      = simd_quatf(angle: -.pi / 2, axis: SIMD3<Float>(1, 0, 0))
-        let rotZ      = simd_quatf(angle:  .pi / 2, axis: SIMD3<Float>(0, 0, 1))
-        let baseRot   = rotX * rotZ
+        // Pivot rotates purely around Y — no base rotation needed here
+        // (the ganchito's own orientation carries rotGX * rotGZ)
         let pendulumY = simd_quatf(angle: angleY, axis: SIMD3<Float>(0, 1, 0))
-        ganchitoEntity.orientation = pendulumY * baseRot
+        pivotEntity.orientation = pendulumY
     }
 
     // MARK: - Idle float
