@@ -9,7 +9,6 @@ import SwiftUI
 import RealityKit
 import Combine
 
-
 struct KeychainView: View {
     @StateObject private var viewModel = KeychainViewModel()
 
@@ -20,6 +19,7 @@ struct KeychainView: View {
             ARViewContainer(viewModel: viewModel)
                 .ignoresSafeArea()
 
+            // Drag gesture layer — captures the full screen
             Color.clear
                 .contentShape(Rectangle())
                 .gesture(
@@ -31,6 +31,25 @@ struct KeychainView: View {
                             viewModel.handleDragEnded()
                         }
                 )
+
+            // Settings button — rendered above the gesture layer so it receives taps first
+            settingsButton
+        }
+        .toolbar(.hidden, for: .navigationBar)
+    }
+
+    private var settingsButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                NavigationLink(destination: SettingsView()) {
+                    Image(systemName: "gearshape.fill")
+                        .font(.title2)
+                        .foregroundStyle(.white.opacity(0.7))
+                        .padding(20)
+                }
+            }
+            Spacer()
         }
     }
 }

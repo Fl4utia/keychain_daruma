@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    // @State owns the @Observable object; .environment() makes it available to all descendants.
+    @State private var settings = SettingsManager()
+
     var body: some View {
-        KeychainView()
+        NavigationStack {
+            KeychainView()
+        }
+        .environment(settings)
     }
 }

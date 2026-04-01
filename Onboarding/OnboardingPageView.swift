@@ -1,8 +1,8 @@
 //
 //  SwiftUIView.swift
-//  QUI
+//  ximena
 //
-//  Created by Salvatore De Rosa on 23/02/26.
+//  Created by Salvatore De Rosa on 01/04/26.
 //
 
 import SwiftUI
