@@ -89,6 +89,7 @@ struct IconSelectionView: View {
 // MARK: - Active Icon View
 
 private struct ActiveIconView: View {
+    @Environment(SettingsManager.self) private var settings
     let option: AppIconOption
 
     var body: some View {
@@ -105,7 +106,7 @@ private struct ActiveIconView: View {
                 .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
 
             Text(option.displayName)
-                .font(.subheadline)
+                .font(settings.currentFont.subheadlineFont)
                 .fontWeight(.medium)
                 .foregroundStyle(.primary)
         }
@@ -115,11 +116,12 @@ private struct ActiveIconView: View {
 // MARK: - Section Header
 
 private struct SectionHeader: View {
+    @Environment(SettingsManager.self) private var settings
     let title: String
 
     var body: some View {
         Text(title)
-            .font(.footnote)
+            .font(settings.currentFont.footnoteFont)
             .fontWeight(.semibold)
             .foregroundStyle(.secondary)
             .textCase(.uppercase)

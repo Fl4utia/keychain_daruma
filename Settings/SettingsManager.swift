@@ -45,13 +45,73 @@ enum AppFont: String, CaseIterable, Identifiable {
         }
     }
 
-    /// Body-sized font applied throughout the app UI
+    /// Body-sized font applied throughout the app UI (17 pt)
     var bodyFont: Font {
         switch self {
         case .system:       .system(.body, design: .default)
         case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 17, relativeTo: .body)
-        case .lexend:       .custom("Lexend-Regular", size: 17, relativeTo: .body)
-        case .openDyslexic: .custom("OpenDyslexic-Regular", size: 17, relativeTo: .body)
+        case .lexend:       .custom("Lexend-Regular",               size: 17, relativeTo: .body)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 17, relativeTo: .body)
+        }
+    }
+
+    /// Large title (34 pt, regular) — prominent display headings
+    var largeTitleFont: Font {
+        switch self {
+        case .system:       .system(.largeTitle)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 34, relativeTo: .largeTitle)
+        case .lexend:       .custom("Lexend-Regular",               size: 34, relativeTo: .largeTitle)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 34, relativeTo: .largeTitle)
+        }
+    }
+
+    /// Title 3 (20 pt, regular) — secondary display text and page descriptions
+    var title3Font: Font {
+        switch self {
+        case .system:       .system(.title3)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 20, relativeTo: .title3)
+        case .lexend:       .custom("Lexend-Regular",               size: 20, relativeTo: .title3)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 20, relativeTo: .title3)
+        }
+    }
+
+    /// Headline (17 pt, semibold) — list row labels, buttons, and emphasis text
+    var headlineFont: Font {
+        switch self {
+        case .system:       .system(.headline)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Bold",    size: 17, relativeTo: .headline)
+        case .lexend:       .custom("Lexend-SemiBold",              size: 17, relativeTo: .headline)
+        case .openDyslexic: .custom("OpenDyslexic-Bold",            size: 17, relativeTo: .headline)
+        }
+    }
+
+    /// Subheadline (15 pt, regular) — secondary labels and supporting text
+    var subheadlineFont: Font {
+        switch self {
+        case .system:       .system(.subheadline)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 15, relativeTo: .subheadline)
+        case .lexend:       .custom("Lexend-Regular",               size: 15, relativeTo: .subheadline)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 15, relativeTo: .subheadline)
+        }
+    }
+
+    /// Footnote (13 pt, regular) — section headers and supplementary labels
+    var footnoteFont: Font {
+        switch self {
+        case .system:       .system(.footnote)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 13, relativeTo: .footnote)
+        case .lexend:       .custom("Lexend-Regular",               size: 13, relativeTo: .footnote)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 13, relativeTo: .footnote)
+        }
+    }
+
+    /// Caption (12 pt, regular) — image captions and the smallest supporting labels
+    var captionFont: Font {
+        switch self {
+        case .system:       .system(.caption)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 12, relativeTo: .caption)
+        case .lexend:       .custom("Lexend-Regular",               size: 12, relativeTo: .caption)
+        case .openDyslexic: .custom("OpenDyslexic-Regular",         size: 12, relativeTo: .caption)
         }
     }
 }

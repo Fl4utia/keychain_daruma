@@ -11,6 +11,7 @@ import SwiftUI
 
 
 public struct IconCell: View {
+    @Environment(SettingsManager.self) private var settings
     let option: AppIconOption
     let isSelected: Bool
     let isChanging: Bool
@@ -21,7 +22,7 @@ public struct IconCell: View {
             VStack(spacing: 10) {
                 iconPreview
                 Text(option.displayName)
-                    .font(.caption)
+                    .font(settings.currentFont.captionFont)
                     .fontWeight(.medium)
                     .foregroundStyle(isSelected ? .primary : .secondary)
             }

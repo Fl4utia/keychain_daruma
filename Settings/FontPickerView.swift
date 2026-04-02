@@ -10,7 +10,7 @@ struct FontPickerView: View {
 
     // Chosen to expose uppercase, lowercase, descenders (g, q) and digits —
     // the most diagnostic combination for comparing typefaces at a glance.
-    private let previewText = "Handmade with care.\nEvery detail matters."
+    private let previewText = "Every detail matters."
 
     var body: some View {
         List {
@@ -31,7 +31,7 @@ struct FontPickerView: View {
 
             Section {
                 ForEach(AppFont.allCases) { font in
-                    FontOptionRow(
+                    FontRow(
                         font: font,
                         isSelected: settings.currentFont == font,
                         onSelect: { select(font) }
@@ -53,42 +53,6 @@ struct FontPickerView: View {
         }
         guard settings.hapticsEnabled else { return }
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-    }
-}
-
-// MARK: - Font Option Row
-
-private struct FontOptionRow: View {
-    let font: AppFont
-    let isSelected: Bool
-    let onSelect: () -> Void
-
-    var body: some View {
-        Button(action: onSelect) {
-            HStack {
-                // Name always rendered in system font for guaranteed legibility
-                Text(font.displayName)
-                    .foregroundStyle(.primary)
-                    .font(font.previewFont)
-
-                Spacer()
-
-                // Sample rendered in the candidate font — "Ag Qq 123" surfaces
-                // cap height, x-height, descenders and numeral style simultaneously
-                Text("Ag Qq 123")
-                    .font(font.previewFont)
-                    .foregroundStyle(.secondary)
-
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.tint)
-                        .padding(.leading, 8)
-                }
-            }
-        }
-        // Expand the tap target to the full row width, not just the text frames
-        .contentShape(Rectangle())
     }
 }
 
