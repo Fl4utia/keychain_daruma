@@ -9,49 +9,49 @@ import Observation
 // MARK: - Font
 
 enum AppFont: String, CaseIterable, Identifiable {
-    case system     = "system"
-    case rounded    = "rounded"
-    case serif      = "serif"
-    case monospaced = "monospaced"
+    case system       = "system"
+    case atkinson     = "atkinson"
+    case lexend       = "lexend"
+    case openDyslexic = "openDyslexic"
 
     var id: String { rawValue }
 
     var displayName: String {
         switch self {
-        case .system:     "System"
-        case .rounded:    "Rounded"
-        case .serif:      "Serif"
-        case .monospaced: "Mono"
+        case .system:       "Default"
+        case .atkinson:     "Atkinson"
+        case .lexend:       "Lexend"
+        case .openDyslexic: "OpenDyslexic"
         }
     }
 
-    /// Large preview shown inside the font chip
+    /// Large preview shown at the top of the font picker (size 26, regular weight)
+    var largePresentationFont: Font {
+        switch self {
+        case .system:       .system(size: 26, weight: .regular, design: .default)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 26)
+        case .lexend:       .custom("Lexend-Regular", size: 26)
+        case .openDyslexic: .custom("OpenDyslexic-Regular", size: 26)
+        }
+    }
+
+    /// Small preview shown inside each row of the font picker (size 17, regular weight)
     var previewFont: Font {
         switch self {
-        case .system:     .system(size: 20, weight: .semibold, design: .default)
-        case .rounded:    .system(size: 20, weight: .semibold, design: .rounded)
-        case .serif:      .system(size: 20, weight: .semibold, design: .serif)
-        case .monospaced: .system(size: 20, weight: .semibold, design: .monospaced)
+        case .system:       .system(size: 17, weight: .regular, design: .default)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 17)
+        case .lexend:       .custom("Lexend-Regular", size: 17)
+        case .openDyslexic: .custom("OpenDyslexic-Regular", size: 17)
         }
     }
 
-    /// Body-sized font for general UI use
+    /// Body-sized font applied throughout the app UI
     var bodyFont: Font {
         switch self {
-        case .system:     .system(.body, design: .default)
-        case .rounded:    .system(.body, design: .rounded)
-        case .serif:      .system(.body, design: .serif)
-        case .monospaced: .system(.body, design: .monospaced)
-        }
-    }
-
-    /// Underlying design token — used to build arbitrary-size fonts outside this enum
-    var design: Font.Design {
-        switch self {
-        case .system:     .default
-        case .rounded:    .rounded
-        case .serif:      .serif
-        case .monospaced: .monospaced
+        case .system:       .system(.body, design: .default)
+        case .atkinson:     .custom("AtkinsonHyperlegible-Regular", size: 17, relativeTo: .body)
+        case .lexend:       .custom("Lexend-Regular", size: 17, relativeTo: .body)
+        case .openDyslexic: .custom("OpenDyslexic-Regular", size: 17, relativeTo: .body)
         }
     }
 }

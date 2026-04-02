@@ -20,7 +20,7 @@ struct FontPickerView: View {
             // which triggers the .opacity transition inside withAnimation.
             Section {
                 Text(previewText)
-                    .font(.system(size: 26, weight: .regular, design: settings.currentFont.design))
+                    .font(settings.currentFont.largePresentationFont)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 16)
                     .id(settings.currentFont)
@@ -75,7 +75,7 @@ private struct FontOptionRow: View {
                 // Sample rendered in the candidate font — "Ag Qq 123" surfaces
                 // cap height, x-height, descenders and numeral style simultaneously
                 Text("Ag Qq 123")
-                    .font(font.bodyFont)
+                    .font(font.previewFont)
                     .foregroundStyle(.secondary)
 
                 if isSelected {

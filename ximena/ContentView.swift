@@ -16,5 +16,6 @@ struct ContentView: View {
             KeychainView()
         }
         .environment(settings)
+        .environment(\.font, settings.currentFont.bodyFont)
     }
 }
