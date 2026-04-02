@@ -29,7 +29,22 @@
 		E45673342F7BD5BE006A5299 /* ximenaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ximenaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9D83CEF02F7E57C800E2CF13 /* Exceptions for "ximena" folder in "ximena" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E456731C2F7BD5BB006A5299 /* ximena */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9D5CC78F2F7E5A9D00D38E28 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		9DDA3FB32F7D0A1A0034F7AD /* Settings */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Settings;
@@ -42,6 +57,9 @@
 		};
 		E456731F2F7BD5BB006A5299 /* ximena */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9D83CEF02F7E57C800E2CF13 /* Exceptions for "ximena" folder in "ximena" target */,
+			);
 			path = ximena;
 			sourceTree = "<group>";
 		};
@@ -85,6 +103,7 @@
 		E45673142F7BD5BB006A5299 = {
 			isa = PBXGroup;
 			children = (
+				9D5CC78F2F7E5A9D00D38E28 /* Resources */,
 				E456731F2F7BD5BB006A5299 /* ximena */,
 				E456732D2F7BD5BE006A5299 /* ximenaTests */,
 				E45673372F7BD5BE006A5299 /* ximenaUITests */,
@@ -120,6 +139,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				9D5CC78F2F7E5A9D00D38E28 /* Resources */,
 				9DDA3FB32F7D0A1A0034F7AD /* Settings */,
 				9DDA3FB62F7D0A2F0034F7AD /* Onboarding */,
 				E456731F2F7BD5BB006A5299 /* ximena */,
@@ -416,6 +436,7 @@
 				DEVELOPMENT_TEAM = K749HXM7G4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ximena/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -448,6 +469,7 @@
 				DEVELOPMENT_TEAM = K749HXM7G4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ximena/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

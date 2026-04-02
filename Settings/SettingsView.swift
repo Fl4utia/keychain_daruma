@@ -13,8 +13,7 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        // @Bindable is required to derive $bindings from an @Observable class
-        // that arrives via @Environment (which only gives a read reference).
+        
         @Bindable var settings = settings
 
         List {
