@@ -69,6 +69,7 @@ private struct FontOptionRow: View {
                 // Name always rendered in system font for guaranteed legibility
                 Text(font.displayName)
                     .foregroundStyle(.primary)
+                    .font(font.previewFont)
 
                 Spacer()
 

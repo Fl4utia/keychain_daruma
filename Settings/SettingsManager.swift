@@ -107,6 +107,10 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(hapticsEnabled, forKey: "hapticsEnabled") }
     }
 
+    var leftHandedMode: Bool = UserDefaults.standard.object(forKey: "leftHandedMode") as? Bool ?? false {
+        didSet { UserDefaults.standard.set(leftHandedMode, forKey: "leftHandedMode") }
+    }
+
     var currentFont: AppFont {
         AppFont(rawValue: selectedFont) ?? .system
     }

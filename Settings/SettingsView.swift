@@ -40,6 +40,10 @@ struct SettingsView: View {
                         Label("App Icon", systemImage: "app.badge")
                     }
                 }
+
+                Toggle(isOn: $settings.leftHandedMode) {
+                    Label("Left-handed Layout", systemImage: "hand.raised.fill")
+                }
             }
 
             // MARK: - Audio

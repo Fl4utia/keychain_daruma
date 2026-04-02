@@ -40,6 +40,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9D2E48FF2F7EA51100315E62 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
 		9D5CC78F2F7E5A9D00D38E28 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
@@ -103,6 +108,7 @@
 		E45673142F7BD5BB006A5299 = {
 			isa = PBXGroup;
 			children = (
+				9D2E48FF2F7EA51100315E62 /* Views */,
 				9D5CC78F2F7E5A9D00D38E28 /* Resources */,
 				E456731F2F7BD5BB006A5299 /* ximena */,
 				E456732D2F7BD5BE006A5299 /* ximenaTests */,
@@ -139,6 +145,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				9D2E48FF2F7EA51100315E62 /* Views */,
 				9D5CC78F2F7E5A9D00D38E28 /* Resources */,
 				9DDA3FB32F7D0A1A0034F7AD /* Settings */,
 				9DDA3FB62F7D0A2F0034F7AD /* Onboarding */,

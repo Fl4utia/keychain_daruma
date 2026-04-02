@@ -186,8 +186,3 @@ class KeychainViewModel: NSObject, ObservableObject {
 }
 
 
-// MARK: - Preview
-
-#Preview {
-    KeychainView()
-}
