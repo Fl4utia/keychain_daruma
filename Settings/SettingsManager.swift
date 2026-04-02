@@ -61,19 +61,18 @@ enum AppFont: String, CaseIterable, Identifiable {
 struct AppIconOption: Identifiable {
     let id: String
     let displayName: String
-    /// Passed to UIApplication.setAlternateIconName — nil resets to primary
+    /// Passed to UIApplication.setAlternateIconName — nil resets to primary icon
     let iconName: String?
-    let accentColor: Color
+    /// Name of the Image Set in the asset catalog used for in-app preview
+    let previewImageName: String
 }
 
 extension AppIconOption {
-    /// Register alternate icons in Xcode: target → Build Settings → "Alternate App Icons".
-    /// Each iconName must match the icon set name in your asset catalog.
+    /// Each iconName must match an appiconset declared in
+    /// Build Settings → Alternate App Icons (ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES).
     static let all: [AppIconOption] = [
-        .init(id: "default", displayName: "Default", iconName: nil,              accentColor: .red),
-        .init(id: "dark",    displayName: "Dark",    iconName: "AppIcon-Dark",    accentColor: Color(white: 0.15)),
-        .init(id: "neon",    displayName: "Neon",    iconName: "AppIcon-Neon",    accentColor: .green),
-        .init(id: "minimal", displayName: "Minimal", iconName: "AppIcon-Minimal", accentColor: Color(white: 0.9)),
+        .init(id: "default", displayName: "Default", iconName: nil,           previewImageName: "icon-preview-default"),
+        .init(id: "neon",    displayName: "Neon",    iconName: "AppIcon-Neon", previewImageName: "icon-preview-neon"),
     ]
 }
 

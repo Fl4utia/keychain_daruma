@@ -33,17 +33,11 @@ public struct IconCell: View {
     }
 
     private var iconPreview: some View {
-        // Background uses the secondary grouped surface — sits naturally
-        // on the screen's systemGroupedBackground without any forced color.
-        // Replace the overlay Image with the real icon asset once available.
-        RoundedRectangle(cornerRadius: 22, style: .continuous)
-            .fill(Color(UIColor.secondarySystemGroupedBackground))
+        Image(option.previewImageName)
+            .resizable()
+            .scaledToFill()
             .frame(width: 80, height: 80)
-            .overlay(
-                Image(systemName: "key.fill")
-                    .font(.title2)
-                    .foregroundStyle(.primary.opacity(0.6))
-            )
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .strokeBorder(

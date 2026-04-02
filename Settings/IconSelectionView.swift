@@ -8,6 +8,7 @@ import SwiftUI
 struct IconSelectionView: View {
     @Environment(SettingsManager.self) private var settings
     @State private var isChanging = false
+    @State private var showErrorAlert = false
 
     // Drives both sections reactively — no extra @State needed.
     private var currentOption: AppIconOption {
@@ -54,6 +55,11 @@ struct IconSelectionView: View {
         .background(Color(UIColor.systemGroupedBackground).ignoresSafeArea())
         .navigationTitle("App Icon")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Couldn't Change Icon", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Your app icon couldn't be updated. Please try again later.")
+        }
     }
 
     // MARK: - Private
@@ -65,7 +71,10 @@ struct IconSelectionView: View {
         UIApplication.shared.setAlternateIconName(option.iconName) { error in
             DispatchQueue.main.async {
                 isChanging = false
-                guard error == nil else { return }
+                if error != nil {
+                    showErrorAlert = true
+                    return
+                }
                 withAnimation(.easeInOut(duration: 0.25)) {
                     settings.selectedAppIcon = option.id
                 }
@@ -84,14 +93,11 @@ private struct ActiveIconView: View {
 
     var body: some View {
         VStack(spacing: 14) {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .fill(Color(UIColor.secondarySystemGroupedBackground))
+            Image(option.previewImageName)
+                .resizable()
+                .scaledToFill()
                 .frame(width: 110, height: 110)
-                .overlay(
-                    Image(systemName: "key.fill")
-                        .font(.title)
-                        .foregroundStyle(.primary.opacity(0.6))
-                )
+                .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 26, style: .continuous)
                         .strokeBorder(Color(UIColor.separator), lineWidth: 0.5)
