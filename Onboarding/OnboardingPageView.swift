@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct OnboardingPageView: View {
+    @Environment(SettingsManager.self) private var settings
     let icon: String
     let color: Color
     let title: String
@@ -31,12 +32,13 @@ struct OnboardingPageView: View {
 
                     VStack(spacing: 15) {
                         Text(title)
-                            .font(.largeTitle.bold())
+                            .font(settings.currentFont.largeTitleFont)
+                            .bold()
                             .multilineTextAlignment(.center)
                             .accessibilityAddTraits(.isHeader)
 
                         Text(description)
-                            .font(.title3)
+                            .font(settings.currentFont.title3Font)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }

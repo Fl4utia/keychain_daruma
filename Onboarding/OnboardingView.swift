@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct OnboardingView: View {
+    @Environment(SettingsManager.self) private var settings
     @Binding var isPresented: Bool
     @State private var currentPage = 0
     @State private var didTapNext = false
@@ -90,7 +90,7 @@ struct OnboardingView: View {
                     }
                 } label: {
                     Text(currentPage < lastIndex ? "Next" : "Create your first Daruma")
-                        .font(.headline)
+                        .font(settings.currentFont.headlineFont)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.glassProminent)

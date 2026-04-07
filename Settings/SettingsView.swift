@@ -40,28 +40,18 @@ struct SettingsView: View {
                         Label("App Icon", systemImage: "app.badge")
                     }
                 }
+
+                Toggle(isOn: $settings.leftHandedMode) {
+                    Label("Left-handed Layout", systemImage: "hand.raised.fill")
+                }
             }
 
             // MARK: - Audio
 
             Section("Audio") {
-                // .animation on the Binding wraps its setter in withAnimation,
-                // which drives the conditional slider insertion/removal below.
-                Toggle(isOn: $settings.musicEnabled.animation(.easeInOut(duration: 0.2))) {
+                
+                Toggle(isOn: $settings.musicEnabled) {
                     Label("Music", systemImage: "music.note")
-                }
-
-                if settings.musicEnabled {
-                    HStack(spacing: 10) {
-                        Image(systemName: "speaker.fill")
-                            .foregroundStyle(.secondary)
-                            .frame(width: 16)
-                        Slider(value: $settings.musicVolume, in: 0...1)
-                        Image(systemName: "speaker.wave.3.fill")
-                            .foregroundStyle(.secondary)
-                            .frame(width: 22)
-                    }
-                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
 
                 Toggle(isOn: $settings.sfxEnabled) {

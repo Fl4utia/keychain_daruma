@@ -33,7 +33,7 @@ class KeychainViewModel: NSObject, ObservableObject {
 
     func setup(arView: ARView) {
         self.arView = arView
-        arView.environment.background = .color(.black)
+        arView.environment.background = .color(.clear)
 
         // Luz principal
         var lightComponent = DirectionalLightComponent()
@@ -186,8 +186,3 @@ class KeychainViewModel: NSObject, ObservableObject {
 }
 
 
-// MARK: - Preview
-
-#Preview {
-    KeychainView()
-}
