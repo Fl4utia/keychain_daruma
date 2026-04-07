@@ -9,6 +9,16 @@ import Foundation
 import SwiftData
 import CloudKit
 
+// MARK: - Daruma Entry
+
+struct DarumaEntry: Identifiable {
+    var id = UUID()
+    var title: String
+    var date: Date
+}
+
+// MARK: - Daruma Type
+
 enum DarumaType: String, CaseIterable, Identifiable {
     case basic = "base_basic_shaded"
     // future: case samurai = "daruma_samurai"
