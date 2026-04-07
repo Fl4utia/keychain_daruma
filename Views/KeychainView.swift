@@ -17,7 +17,6 @@ struct KeychainView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
 
             ARViewContainer(viewModel: viewModel)
                 .ignoresSafeArea()
@@ -82,7 +81,7 @@ struct ARViewContainer: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
-        arView.environment.background = .color(.black)
+        arView.environment.background = .color(.clear)
         viewModel.setup(arView: arView)
         return arView
     }

@@ -11,7 +11,6 @@ struct ContentView: View {
     // @State owns the @Observable object; .environment() makes it available to all descendants.
     @State private var settings = SettingsManager()
 
-    // These flags gate the first-launch flow. @AppStorage persists them across launches.
     @AppStorage("hasCompletedFirstSettings") private var hasCompletedFirstSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
