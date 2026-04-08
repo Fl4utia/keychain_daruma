@@ -13,7 +13,16 @@ struct KeychainView: View {
     @StateObject private var viewModel = KeychainViewModel()
     @Environment(SettingsManager.self) private var settings
     @State private var showSettings = false
+    @State private var showDarumaDetail = false
     @State private var showAddNew = false
+    @State private var entries: [DarumaEntry] = []
+
+    // Placeholder daruma — tapping the 3D doll opens its detail view.
+    // Replace with persisted entry once storage is wired up.
+    private let placeholderEntry = DarumaEntry(
+        title: "laurea",
+        date: Calendar.current.date(from: DateComponents(year: 2027, month: 8, day: 28))!
+    )
 
     var body: some View {
         ZStack {
@@ -21,7 +30,9 @@ struct KeychainView: View {
             ARViewContainer(viewModel: viewModel)
                 .ignoresSafeArea()
 
-            // Drag gesture layer — captures the full screen
+            // Drag gesture layer — captures the full screen.
+            // A gesture that ends with less than 10 pt of travel is treated as a tap
+            // and opens the daruma detail view instead of applying pendulum force.
             Color.clear
                 .contentShape(Rectangle())
                 .gesture(
@@ -29,8 +40,12 @@ struct KeychainView: View {
                         .onChanged { value in
                             viewModel.handleDrag(translation: value.translation)
                         }
-                        .onEnded { _ in
+                        .onEnded { value in
                             viewModel.handleDragEnded()
+                            let magnitude = hypot(value.translation.width, value.translation.height)
+                            if magnitude < 10 {
+                                showDarumaDetail = true
+                            }
                         }
                 )
         }
@@ -44,32 +59,35 @@ struct KeychainView: View {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
             }
-
+            
             ToolbarItemGroup(placement: .bottomBar) {
                 if settings.leftHandedMode {
-                    Button {
-                        showAddNew = true
-                    } label: {
-                        Label("Add new", systemImage: "plus")
+                    Button { showAddNew = true } label: {
+                        Image(systemName: "plus")
                     }
+                    .accessibilityLabel("New Daruma")
                     Spacer()
                 } else {
                     Spacer()
-                    Button {
-                        showAddNew = true
-                    } label: {
-                        Label("Add new", systemImage: "plus")
+                    Button { showAddNew = true } label: {
+                        Image(systemName: "plus")
                     }
+                    .accessibilityLabel("New Daruma")
                 }
             }
+            
         }
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(.visible, for: .bottomBar)
         .navigationDestination(isPresented: $showSettings) {
             SettingsView()
         }
-        .navigationDestination(isPresented: $showAddNew) {
-            AddNewView()
+        .navigationDestination(isPresented: $showDarumaDetail) {
+            DarumaDetailView(entry: placeholderEntry)
+        }
+        .sheet(isPresented: $showAddNew) {
+            AddNewView { newEntry in
+                entries.append(newEntry)
+            }
         }
     }
 }
