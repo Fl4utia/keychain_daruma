@@ -14,6 +14,8 @@ struct KeychainView: View {
     @Environment(SettingsManager.self) private var settings
     @State private var showSettings = false
     @State private var showDarumaDetail = false
+    @State private var showAddNew = false
+    @State private var entries: [DarumaEntry] = []
 
     // Placeholder daruma — tapping the 3D doll opens its detail view.
     // Replace with persisted entry once storage is wired up.
@@ -57,6 +59,23 @@ struct KeychainView: View {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
             }
+            
+            ToolbarItemGroup(placement: .bottomBar) {
+                if settings.leftHandedMode {
+                    Button { showAddNew = true } label: {
+                        Image(systemName: "plus")
+                    }
+                    .accessibilityLabel("New Daruma")
+                    Spacer()
+                } else {
+                    Spacer()
+                    Button { showAddNew = true } label: {
+                        Image(systemName: "plus")
+                    }
+                    .accessibilityLabel("New Daruma")
+                }
+            }
+            
         }
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationDestination(isPresented: $showSettings) {
@@ -64,6 +83,11 @@ struct KeychainView: View {
         }
         .navigationDestination(isPresented: $showDarumaDetail) {
             DarumaDetailView(entry: placeholderEntry)
+        }
+        .sheet(isPresented: $showAddNew) {
+            AddNewView { newEntry in
+                entries.append(newEntry)
+            }
         }
     }
 }

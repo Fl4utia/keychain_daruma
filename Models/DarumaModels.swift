@@ -15,30 +15,29 @@ struct DarumaEntry: Identifiable {
     var id = UUID()
     var title: String
     var date: Date
+    var recordingURL: URL?
+    var darumaType: DarumaType = .basic
 }
 
 // MARK: - Daruma Type
 
 enum DarumaType: String, CaseIterable, Identifiable {
-    case basic = "base_basic_shaded"
-    // future: case samurai = "daruma_samurai"
+    case basic       = "base_basic_shaded"
+    case bilouPink   = "bilou_pink"
+    case deerBoy     = "deer_boy_girl_them"
+    case madalunians = "madalunians"
 
     var id: String { rawValue }
 
     var displayName: String {
         switch self {
-        case .basic: return "Classic"
+        case .basic:       return "Classic"
+        case .bilouPink:   return "Bilou"
+        case .deerBoy:     return "Deer"
+        case .madalunians: return "Special"
         }
     }
 
-    /// Name of the image asset used as card preview.
-    /// Replace with your actual asset name when available.
-    var previewImageName: String {
-        switch self {
-        case .basic: return "daruma_preview_basic"
-        }
-    }
-
-    /// Matches the .reality / .usdz file name loaded in KeychainViewModel.
+    /// Matches the file name loaded by Entity.load(named:) from the bundle.
     var modelFileName: String { rawValue }
 }

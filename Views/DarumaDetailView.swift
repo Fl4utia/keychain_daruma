@@ -4,7 +4,8 @@
 //
 //  Created by Salvatore De Rosa on 02/04/2026.
 //
-
+//  NOTE: rename this file to DarumaDetailView.swift in Xcode's Project Navigator
+//  (right-click → Rename) to resolve persistent SourceKit indexing warnings.
 
 import UIKit       // UIViewRepresentable, UIPanGestureRecognizer
 import RealityKit  // ARView, AnchorEntity, Entity, DirectionalLightComponent
@@ -33,23 +34,40 @@ struct DarumaDetailView: View {
 
     var body: some View {
         ZStack {
-            
+            // ── 1. Background ──────────────────────────────────────────────────
+            Color(.systemBackground)
+                .ignoresSafeArea()
+
+            // ── 2. Ghost title — behind the daruma in ZStack order ─────────────
+            // Large fixed font + minimumScaleFactor: the layout engine scales it
+            // to fill available space with zero geometry reading required.
             GhostTitleView(title: entry.title, isEditing: isEditing)
 
+            // ── 3. Daruma scene + floating record button ───────────────────────
+            // allowsHitTesting is managed inside DarumaSceneView based on isEditing.
             DarumaSceneView(audioManager: audioManager, isEditing: isEditing)
 
+            // ── 4. Dark overlay — dims the scene when editing ─────────────────
+            // Sits above the daruma and ghost text, below the title field.
+            // Provides the visual focus cue that the screen is in edit mode.
             if isEditing {
                 Color.black.opacity(0.55)
                     .ignoresSafeArea()
                     .transition(.opacity)
             }
 
+            // ── 5. Tap-to-dismiss surface ──────────────────────────────────────
+            // Transparent, above the dark overlay, below the title field.
+            // Taps outside the TextField exit edit mode.
             if isEditing {
                 Color.clear
                     .contentShape(Rectangle())
                     .onTapGesture { exitEditing() }
             }
 
+            // ── 6. Inline title editor ─────────────────────────────────────────
+            // Topmost layer. FocusState lives here in the root view — it cannot
+            // be bridged to a child struct without losing the focus contract.
             if isEditing {
                 TextField("Goal", text: $entry.title)
                     .font(.title2.bold())
@@ -70,7 +88,9 @@ struct DarumaDetailView: View {
                     .zIndex(1)
             }
         }
-
+        // Bottom bar — pinned above the home indicator via safeAreaInset.
+        // .ignoresSafeArea(.keyboard) prevents the bar from jumping when the
+        // title keyboard appears, since editing happens at the top of the screen.
         .safeAreaInset(edge: .bottom) {
             DetailBottomBar(
                 date: Self.dateFmt.string(from: entry.date),
@@ -81,7 +101,9 @@ struct DarumaDetailView: View {
             .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isEditing)
             .ignoresSafeArea(.keyboard)
         }
-        
+        // Back button is hidden while editing — navigating away mid-edit
+        // would discard unsaved changes without warning, which violates HIG.
+        // The "Done" button is the only exit path during edit mode.
         .navigationBarBackButtonHidden(isEditing)
         .toolbar {
             // Native "Edit" / "Done" text pattern — identical to Notes, Contacts,
@@ -216,89 +238,35 @@ private struct DetailBottomBar: View {
 struct RecordFloatingButton: View {
     let audioManager: AudioRecorderManager
 
-    @State private var showDeleteConfirmation = false
-
-    // Trash is visible only when a recording exists and capture is not active.
-    // Hiding it during recording prevents accidental deletion mid-capture.
-    private var showTrash: Bool {
-        (audioManager.hasRecording || audioManager.isPlaying) && !audioManager.isRecording
-    }
-
-    var body: some View {
-        HStack(spacing: 16) {
-
-            // ── Trash — slides in from the trailing edge when a recording exists ──
-            if showTrash {
-                Button {
-                    showDeleteConfirmation = true
-                } label: {
-                    Image(systemName: "trash")
-                        .font(.system(size: 22, weight: .medium))
-                        .foregroundStyle(.red)
-                }
-                .frame(width: 44, height: 44)
-                .buttonStyle(.plain)
-                .accessibilityLabel("Delete recording")
-                .transition(
-                    .asymmetric(
-                        insertion: .opacity.combined(with: .move(edge: .trailing)),
-                        removal:   .opacity.combined(with: .move(edge: .trailing))
-                    )
-                )
-            }
-
-            // ── Primary button — mic · stop · play · pause ─────────────────────
-            Button {
-                if audioManager.isRecording {
-                    audioManager.stopRecording()
-                } else if audioManager.isPlaying {
-                    audioManager.stopPlayback()
-                } else if audioManager.hasRecording {
-                    audioManager.playRecording()
-                } else {
-                    Task { await audioManager.startRecording() }
-                }
-            } label: {
-                Image(systemName: primaryIconName)
-                    .font(.system(size: 34))
-                    .foregroundStyle(.primary.opacity(0.85))
-                    .contentTransition(.symbolEffect(.replace))
-            }
-            .frame(width: 44, height: 44)
-            .buttonStyle(.plain)
-            .accessibilityLabel(primaryAccessibilityLabel)
-        }
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: showTrash)
-        .animation(.spring(response: 0.3,  dampingFraction: 0.7), value: audioManager.isRecording)
-        .animation(.spring(response: 0.3,  dampingFraction: 0.7), value: audioManager.isPlaying)
-        // confirmationDialog on the container — reliable because RecordFloatingButton
-        // is always present in the hierarchy (not inside a conditional branch).
-        .confirmationDialog(
-            "Delete this recording?",
-            isPresented: $showDeleteConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("Delete", role: .destructive) {
-                audioManager.deleteRecording()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("You can record a new one afterwards.")
-        }
-    }
-
-    private var primaryIconName: String {
+    private var iconName: String {
         if audioManager.isRecording  { return "stop.circle.fill" }
         if audioManager.isPlaying    { return "pause.circle.fill" }
         if audioManager.hasRecording { return "play.circle.fill" }
-        return "mic.circle"
+        return "record.circle"
     }
 
-    private var primaryAccessibilityLabel: String {
-        if audioManager.isRecording  { return "Stop recording" }
-        if audioManager.isPlaying    { return "Pause playback" }
-        if audioManager.hasRecording { return "Play recording" }
-        return "Start recording"
+    var body: some View {
+        Button {
+            if audioManager.isRecording {
+                audioManager.stopRecording()
+            } else if audioManager.isPlaying {
+                audioManager.stopPlayback()
+            } else if audioManager.hasRecording {
+                audioManager.playRecording()
+            } else {
+                Task { await audioManager.startRecording() }
+            }
+        } label: {
+            Image(systemName: iconName)
+                .font(.system(size: 34))
+                .foregroundStyle(.primary.opacity(0.85))
+                .contentTransition(.symbolEffect(.replace))
+        }
+        .frame(width: 44, height: 44)   // HIG minimum touch target
+        .buttonStyle(.plain)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: audioManager.isRecording)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: audioManager.hasRecording)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: audioManager.isPlaying)
     }
 }
 
@@ -306,6 +274,7 @@ struct RecordFloatingButton: View {
 
 struct DarumaPreviewView: UIViewRepresentable {
     let darumaType: DarumaType
+    var interactive: Bool = true
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -322,11 +291,13 @@ struct DarumaPreviewView: UIViewRepresentable {
             context.coordinator.attach(entity: entity, to: anchor)
         }
 
-        let pan = UIPanGestureRecognizer(
-            target: context.coordinator,
-            action: #selector(Coordinator.handlePan(_:))
-        )
-        arView.addGestureRecognizer(pan)
+        if interactive {
+            let pan = UIPanGestureRecognizer(
+                target: context.coordinator,
+                action: #selector(Coordinator.handlePan(_:))
+            )
+            arView.addGestureRecognizer(pan)
+        }
 
         return arView
     }
