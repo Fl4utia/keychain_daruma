@@ -132,7 +132,7 @@ extension AppIconOption {
     /// Build Settings → Alternate App Icons (ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES).
     static let all: [AppIconOption] = [
         .init(id: "default", displayName: "Default", iconName: nil,           previewImageName: "icon-preview-default"),
-        .init(id: "neon",    displayName: "Neon",    iconName: "AppIcon-Neon", previewImageName: "icon-preview-neon"),
+        .init(id: "daru",    displayName: "Neon",    iconName: "AppIcon-Neon", previewImageName: "icon-preview-neon"),
     ]
 }
 

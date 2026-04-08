@@ -17,6 +17,8 @@ struct AddNewView: View {
     @State private var audioManager = AudioRecorderManager()
     @FocusState private var titleFocused: Bool
 
+    private var keyboardActive: Bool { titleFocused }
+
     private var canSave: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
     }
@@ -31,6 +33,7 @@ struct AddNewView: View {
                     .multilineTextAlignment(.center)
                     .focused($titleFocused)
                     .submitLabel(.done)
+                    .onSubmit { titleFocused = false }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .background(
@@ -40,16 +43,28 @@ struct AddNewView: View {
                     .padding(.horizontal, 32)
                     .padding(.top, 24)
 
-                // Daruma type selector
-                DarumaCarouselView(selectedType: $selectedType)
-                    .padding(.top, 16)
+                // Carousel + recording panel appear only after keyboard dismisses.
+                // This prevents the 270pt carousel from being compressed into the
+                // ~252pt of space left when the keyboard is visible.
+                if !keyboardActive {
+                    DarumaCarouselView(selectedType: $selectedType)
+                        .padding(.top, 16)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
 
                 Spacer()
 
             }
+            // Let the keyboard overlap the layout from below rather than
+            // compressing the VStack. We control what's visible via keyboardActive.
+            .ignoresSafeArea(.keyboard)
             .safeAreaInset(edge: .bottom) {
-                RecordingPanel(audioManager: audioManager)
+                if !keyboardActive {
+                    RecordingPanel(audioManager: audioManager)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
             }
+            .animation(.spring(response: 0.4, dampingFraction: 0.82), value: keyboardActive)
             .navigationTitle("New Daruma")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -74,9 +89,6 @@ struct AddNewView: View {
                     .fontWeight(.semibold)
                     .disabled(!canSave)
                 }
-            }
-            .onAppear {
-                titleFocused = true
             }
         }
     }
@@ -124,10 +136,10 @@ private struct CarouselCard: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            DarumaPreviewView(darumaType: type, interactive: false)
+            DarumaPreviewView(darumaType: type, interactive: false, entityScale: 0.65)
                 .frame(height: 210)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .scaleEffect(isSelected ? 1.0 : 0.82)
+                .scaleEffect(isSelected ? 1.0 : 0.84)
                 .opacity(isSelected ? 1.0 : 0.4)
                 .animation(.spring(response: 0.4, dampingFraction: 0.78), value: isSelected)
 

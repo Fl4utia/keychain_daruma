@@ -275,6 +275,7 @@ struct RecordFloatingButton: View {
 struct DarumaPreviewView: UIViewRepresentable {
     let darumaType: DarumaType
     var interactive: Bool = true
+    var entityScale: Float = 1.0
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -288,7 +289,7 @@ struct DarumaPreviewView: UIViewRepresentable {
         arView.scene.anchors.append(anchor)
 
         if let entity = try? Entity.load(named: darumaType.modelFileName) {
-            context.coordinator.attach(entity: entity, to: anchor)
+            context.coordinator.attach(entity: entity, to: anchor, scale: entityScale)
         }
 
         if interactive {
@@ -329,8 +330,8 @@ struct DarumaPreviewView: UIViewRepresentable {
         private var pivot: Entity?
         private var accumulatedAngleY: Float = 0
 
-        func attach(entity: Entity, to anchor: AnchorEntity) {
-            entity.scale = SIMD3<Float>(repeating: 1.0)
+        func attach(entity: Entity, to anchor: AnchorEntity, scale: Float) {
+            entity.scale = SIMD3<Float>(repeating: scale)
             let bounds = entity.visualBounds(relativeTo: nil)
             entity.position = -bounds.center
 
