@@ -29,6 +29,7 @@ struct OnboardingView: View {
     @State private var currentPage = 0
     @State private var didTapNext = false
     @State private var result = OnboardingResult()
+    @State private var navigateToKeychain = false
 
     private let pageCount = 5
     private var lastIndex: Int { pageCount - 1 }
@@ -49,46 +50,26 @@ struct OnboardingView: View {
         NavigationStack {
             VStack(spacing: 0) {
 
-                // ── Page carousel ──────────────────────────────────
-                TabView(selection: $currentPage) {
-
-                    OnboardingDarumaWelcomePage()
-                        .tag(0)
-
-                    OnboardingMakeAWishPage(
-                        wishText: $result.wishText,
-                        wishDescription: $result.wishDescription,
-                        darumaImage: $result.darumaImage
-                    )
-                    .tag(1)
-
-                    OnboardingPaintFirstEyePage(
-                        hasFirstEyePainted: $result.hasFirstEyePainted
-                    )
-                    .tag(2)
-
-                    OnboardingKeepVisiblePage(
-                        reminderEnabled: $result.reminderEnabled,
-                        reminderTime: $result.reminderTime
-                    )
-                    .tag(3)
-
-                    OnboardingSecondEyePage()
-                        .tag(4)
+                // ── Pages displayed programmatically ─────────────
+                ZStack {
+                    switch currentPage {
+                    case 0: OnboardingDarumaWelcomePage()
+                    case 1: OnboardingMakeAWishPage(
+                                wishText: $result.wishText,
+                                wishDescription: $result.wishDescription,
+                                darumaImage: $result.darumaImage)
+                    case 2: OnboardingPaintFirstEyePage(hasFirstEyePainted: $result.hasFirstEyePainted)
+                    case 3: OnboardingKeepVisiblePage(
+                                reminderEnabled: $result.reminderEnabled,
+                                reminderTime: $result.reminderTime)
+                    case 4: OnboardingSecondEyePage()
+                    default: EmptyView()
+                    }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
-                .sensoryFeedback(.selection, trigger: currentPage)
-                .onChange(of: currentPage) { _, newValue in
-                    UIAccessibility.post(
-                        notification: .announcement,
-                        argument: "Page \(newValue + 1) of \(pageCount)"
-                    )
-                }
+                .animation(.easeInOut, value: currentPage)
+                .transition(.slide)
 
                 // ── Single CTA button ──────────────────────────────
-                // This is the ONLY navigation button across all pages.
-                // Individual pages must NOT have their own continue buttons.
                 Button {
                     didTapNext.toggle()
                     if currentPage < lastIndex {
@@ -96,7 +77,7 @@ struct OnboardingView: View {
                             currentPage += 1
                         }
                     } else {
-                        isPresented = false
+                        navigateToKeychain = true
                     }
                 } label: {
                     Text(nextButtonLabel)
@@ -115,6 +96,15 @@ struct OnboardingView: View {
                         ? "Goes to the next step."
                         : "Finishes onboarding and creates your first Daruma."
                 )
+
+                // ── Hidden NavigationLink to KeychainView ─────────────
+                NavigationLink(
+                    destination: KeychainView()
+                        .environment(settings),
+                    isActive: $navigateToKeychain,
+                    label: { EmptyView() }
+                )
+                .hidden()
             }
             .background(Color(.systemBackground).ignoresSafeArea())
             .toolbar {
