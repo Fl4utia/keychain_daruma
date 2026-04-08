@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B7D6ABA92F871BB7009B4430 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D6ABA82F871BB7009B4430 /* WidgetKit.framework */; };
+		B7D6ABAB2F871BB7009B4430 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D6ABAA2F871BB7009B4430 /* SwiftUI.framework */; };
+		B7D6ABBC2F871BB8009B4430 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B7D6ABA62F871BB7009B4430 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		B7D6ABBA2F871BB8009B4430 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E45673152F7BD5BB006A5299 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B7D6ABA52F871BB7009B4430;
+			remoteInfo = WidgetExtension;
+		};
 		E456732B2F7BD5BE006A5299 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E45673152F7BD5BB006A5299 /* Project object */;
@@ -23,7 +36,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B7D6ABBD2F871BB8009B4430 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B7D6ABBC2F871BB8009B4430 /* WidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		B7D6ABA62F871BB7009B4430 /* WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7D6ABA82F871BB7009B4430 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B7D6ABAA2F871BB7009B4430 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		E456731D2F7BD5BB006A5299 /* ximena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ximena.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E456732A2F7BD5BE006A5299 /* ximenaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ximenaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E45673342F7BD5BE006A5299 /* ximenaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ximenaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,6 +66,27 @@
 				Info.plist,
 			);
 			target = E456731C2F7BD5BB006A5299 /* ximena */;
+		};
+		B7D6ABC12F871BB8009B4430 /* Exceptions for "Widget" folder in "WidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Full Eye/Big1.png",
+				"Full Eye/Big2.png",
+				"Full Eye/Medium1.png",
+				"Full Eye/Medium2.png",
+				"Full Eye/Medium3.png",
+				"Full Eye/Small1.png",
+				"Full Eye/Small2.png",
+				Info.plist,
+				"One Eye/Big1.png",
+				"One Eye/Big2.png",
+				"One Eye/Medium1.png",
+				"One Eye/Medium2.png",
+				"One Eye/Medium3.png",
+				"One Eye/Small1.png",
+				"One Eye/Small2.png",
+			);
+			target = B7D6ABA52F871BB7009B4430 /* WidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -53,6 +104,14 @@
 		9DDA3FB62F7D0A2F0034F7AD /* Onboarding */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		B7D6ABAC2F871BB7009B4430 /* Widget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B7D6ABC12F871BB8009B4430 /* Exceptions for "Widget" folder in "WidgetExtension" target */,
+			);
+			path = Widget;
 			sourceTree = "<group>";
 		};
 		E456731F2F7BD5BB006A5299 /* ximena */ = {
@@ -76,6 +135,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B7D6ABA32F871BB7009B4430 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B7D6ABAB2F871BB7009B4430 /* SwiftUI.framework in Frameworks */,
+				B7D6ABA92F871BB7009B4430 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E456731A2F7BD5BB006A5299 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,6 +168,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B7D6ABA72F871BB7009B4430 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B7D6ABA82F871BB7009B4430 /* WidgetKit.framework */,
+				B7D6ABAA2F871BB7009B4430 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E45673142F7BD5BB006A5299 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +184,8 @@
 				E456731F2F7BD5BB006A5299 /* ximena */,
 				E456732D2F7BD5BE006A5299 /* ximenaTests */,
 				E45673372F7BD5BE006A5299 /* ximenaUITests */,
+				B7D6ABAC2F871BB7009B4430 /* Widget */,
+				B7D6ABA72F871BB7009B4430 /* Frameworks */,
 				E456731E2F7BD5BB006A5299 /* Products */,
 				9DDA3FB62F7D0A2F0034F7AD /* Onboarding */,
 				9DDA3FB32F7D0A1A0034F7AD /* Settings */,
@@ -119,6 +198,7 @@
 				E456731D2F7BD5BB006A5299 /* ximena.app */,
 				E456732A2F7BD5BE006A5299 /* ximenaTests.xctest */,
 				E45673342F7BD5BE006A5299 /* ximenaUITests.xctest */,
+				B7D6ABA62F871BB7009B4430 /* WidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,6 +206,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B7D6ABA52F871BB7009B4430 /* WidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B7D6ABC02F871BB8009B4430 /* Build configuration list for PBXNativeTarget "WidgetExtension" */;
+			buildPhases = (
+				B7D6ABA22F871BB7009B4430 /* Sources */,
+				B7D6ABA32F871BB7009B4430 /* Frameworks */,
+				B7D6ABA42F871BB7009B4430 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B7D6ABAC2F871BB7009B4430 /* Widget */,
+			);
+			name = WidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = WidgetExtension;
+			productReference = B7D6ABA62F871BB7009B4430 /* WidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E456731C2F7BD5BB006A5299 /* ximena */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E456733E2F7BD5BE006A5299 /* Build configuration list for PBXNativeTarget "ximena" */;
@@ -133,10 +235,12 @@
 				E45673192F7BD5BB006A5299 /* Sources */,
 				E456731A2F7BD5BB006A5299 /* Frameworks */,
 				E456731B2F7BD5BB006A5299 /* Resources */,
+				B7D6ABBD2F871BB8009B4430 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B7D6ABBB2F871BB8009B4430 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9D5CC78F2F7E5A9D00D38E28 /* Resources */,
@@ -204,9 +308,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					B7D6ABA52F871BB7009B4430 = {
+						CreatedOnToolsVersion = 26.3;
+					};
 					E456731C2F7BD5BB006A5299 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
@@ -237,11 +344,19 @@
 				E456731C2F7BD5BB006A5299 /* ximena */,
 				E45673292F7BD5BE006A5299 /* ximenaTests */,
 				E45673332F7BD5BE006A5299 /* ximenaUITests */,
+				B7D6ABA52F871BB7009B4430 /* WidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B7D6ABA42F871BB7009B4430 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E456731B2F7BD5BB006A5299 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,6 +381,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B7D6ABA22F871BB7009B4430 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E45673192F7BD5BB006A5299 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,6 +412,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B7D6ABBB2F871BB8009B4430 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B7D6ABA52F871BB7009B4430 /* WidgetExtension */;
+			targetProxy = B7D6ABBA2F871BB8009B4430 /* PBXContainerItemProxy */;
+		};
 		E456732C2F7BD5BE006A5299 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E456731C2F7BD5BB006A5299 /* ximena */;
@@ -303,6 +430,68 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B7D6ABBE2F871BB8009B4430 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KWD4VT242A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.salvatorederosa.ximena.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B7D6ABBF2F871BB8009B4430 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KWD4VT242A;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.salvatorederosa.ximena.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		E456733C2F7BD5BE006A5299 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -434,7 +623,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K749HXM7G4;
+				DEVELOPMENT_TEAM = KWD4VT242A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ximena/Info.plist;
@@ -448,7 +637,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.salvatorederosa.ximena;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaetanopascarella.ximena.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -468,7 +657,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K749HXM7G4;
+				DEVELOPMENT_TEAM = KWD4VT242A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ximena/Info.plist;
@@ -482,7 +671,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.salvatorederosa.ximena;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaetanopascarella.ximena.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -581,6 +770,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B7D6ABC02F871BB8009B4430 /* Build configuration list for PBXNativeTarget "WidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7D6ABBE2F871BB8009B4430 /* Debug */,
+				B7D6ABBF2F871BB8009B4430 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E45673182F7BD5BB006A5299 /* Build configuration list for PBXProject "ximena" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
