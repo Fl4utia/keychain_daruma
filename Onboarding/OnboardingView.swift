@@ -1,123 +1,117 @@
 //
-//  SwiftUIView.swift
-//  ximena
-//
-//  Created by Salvatore De Rosa on 01/04/26.
+//  OnboardingView.swift
 //
 
 import SwiftUI
 
+// MARK: – Shared onboarding state
+
+struct OnboardingResult {
+    var wishText: String = ""
+    var wishDescription: String = ""
+    var darumaImage: UIImage? = nil
+    var hasFirstEyePainted: Bool = false
+    var reminderEnabled: Bool = false
+    var reminderTime: Date = {
+        var comps = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        comps.hour = 9; comps.minute = 0; comps.second = 0
+        return Calendar.current.date(from: comps) ?? Date()
+    }()
+}
+
+// MARK: – Main OnboardingView
+
 struct OnboardingView: View {
     @Environment(SettingsManager.self) private var settings
+    @Environment(\.colorScheme) var colorScheme
     @Binding var isPresented: Bool
+
     @State private var currentPage = 0
     @State private var didTapNext = false
+    @State private var result = OnboardingResult()
+    @State private var navigateToKeychain = false
 
-    private struct OnboardingPage: Identifiable {
-        let id = UUID()
-        let icon: String
-        let color: Color
-        let title: String
-        let description: String
-    }
+    private let pageCount = 5
+    private var lastIndex: Int { pageCount - 1 }
 
-    private let pages: [OnboardingPage] = [
-        OnboardingPage(
-            icon: "document",
-            color: .green,
-            title: "First page",
-            description: "First page"
-        ),
-        OnboardingPage(
-            icon: "document",
-            color: .orange,
-            title: "Second page",
-            description: "Second page"
-        ),
-        OnboardingPage(
-            icon: "document",
-            color: .red,
-            title: "Third page",
-            description: "Third page"
-        ),
-        OnboardingPage(
-            icon: "document",
-            color: .accentColor,
-            title: "Fourth page",
-            description: "Fourth page"
-        )
-    ]
-
-    private var lastIndex: Int {
-        max(pages.count - 1, 0)
+    private var nextButtonLabel: String {
+        switch currentPage {
+        case 0: return "Get Started"
+        case 1: return result.wishText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? "Set My Goal" : "I'm Ready"
+        case 2: return result.hasFirstEyePainted ? "Eye Painted ✓" : "I'll Paint It Later"
+        case 3: return "Got It"
+        case lastIndex: return "Create My Daruma"
+        default: return "Next"
+        }
     }
 
     var body: some View {
-
         NavigationStack {
-            VStack {
-                TabView(selection: $currentPage) {
-                    ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
-                        OnboardingPageView(
-                            icon: page.icon,
-                            color: page.color,
-                            title: page.title,
-                            description: page.description
-                        )
-                        .tag(index)
+            VStack(spacing: 0) {
+
+                // ── Pages displayed programmatically ─────────────
+                ZStack {
+                    switch currentPage {
+                    case 0: OnboardingDarumaWelcomePage()
+                    case 1: OnboardingMakeAWishPage(
+                                wishText: $result.wishText,
+                                wishDescription: $result.wishDescription,
+                                darumaImage: $result.darumaImage)
+                    case 2: OnboardingPaintFirstEyePage(hasFirstEyePainted: $result.hasFirstEyePainted)
+                    case 3: OnboardingKeepVisiblePage(
+                                reminderEnabled: $result.reminderEnabled,
+                                reminderTime: $result.reminderTime)
+                    case 4: OnboardingSecondEyePage()
+                    default: EmptyView()
                     }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .always))
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
-                .sensoryFeedback(.selection, trigger: currentPage)
-                .onChange(of: currentPage) { _, newValue in
-                    let pageNumber = newValue + 1
-                    let totalPages = max(pages.count, 1)
-                    UIAccessibility.post(
-                        notification: .announcement,
-                        argument: "Page \(pageNumber) of \(totalPages)"
-                    )
-                }
+                .animation(.easeInOut, value: currentPage)
+                .transition(.slide)
 
+                // ── Single CTA button ──────────────────────────────
                 Button {
                     didTapNext.toggle()
                     if currentPage < lastIndex {
-                        withAnimation {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                             currentPage += 1
                         }
                     } else {
-                        isPresented = false
+                        navigateToKeychain = true
                     }
                 } label: {
-                    Text(currentPage < lastIndex ? "Next" : "Create your first Daruma")
+                    Text(nextButtonLabel)
                         .font(settings.currentFont.headlineFont)
                         .frame(maxWidth: .infinity)
+                        .animation(.easeInOut(duration: 0.2), value: nextButtonLabel)
                 }
                 .buttonStyle(.glassProminent)
                 .controlSize(.extraLarge)
-                .tint(.accentColor)
+                .tint(colorScheme == .dark ? .white : .black)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 16)
+                .sensoryFeedback(.impact(flexibility: .soft), trigger: didTapNext)
                 .accessibilityHint(
                     currentPage < lastIndex
-                        ? "Goes to the next page."
-                        : "Closes the welcome screen and starts the app."
-                )
-                .padding()
-                .sensoryFeedback(
-                    .impact(flexibility: .soft),
-                    trigger: didTapNext
+                        ? "Goes to the next step."
+                        : "Finishes onboarding and creates your first Daruma."
                 )
 
+                // ── Hidden NavigationLink to KeychainView ─────────────
+                NavigationLink(
+                    destination: KeychainView()
+                        .environment(settings),
+                    isActive: $navigateToKeychain,
+                    label: { EmptyView() }
+                )
+                .hidden()
             }
+            .background(Color(.systemBackground).ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if currentPage < lastIndex {
-                        Button("Skip") {
-                            isPresented = false
-                        }
-                        .foregroundStyle(.secondary)
-                        .accessibilityHint(
-                            "Skips the tutorial and starts the app."
-                        )
+                        Button("Skip") { isPresented = false }
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -127,4 +121,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView(isPresented: .constant(true))
+        .environment(SettingsManager())
 }
